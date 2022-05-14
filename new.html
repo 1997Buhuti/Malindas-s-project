@@ -23,15 +23,72 @@
     ></script>
     <script src="https://unpkg.com/feather-icons"></script>
     <!-- <uidiv> -->
-    <div id="warning">
+    <!-- <div id="warning">
       <h1 style="font-weight: 500">
         Speech Recognition Speech SDK not found
         (microsoft.cognitiveservices.speech.sdk.bundle.js missing).
       </h1>
-    </div>
+    </div> -->
     <div class="container">
-      <div class="row">
-        <div id="content" style="display: none">
+      <div class="row justify-content-center">
+        <h1>Patient Records Management</h1>
+        <div class="col">
+          <form>
+            <div class="row">
+              <div class="col-10 mb-3">
+                <label for="exampleInputEmail1" class="form-label"
+                  >Name of the Patient</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="phraseDiv"
+                  aria-describedby="patientName"
+                />
+              </div>
+              <div class="col-2 mt-4 p-2">
+                <button
+                  id="startRecognizeOnceAsyncButton"
+                  onclick="displayRecordedMessage(phraseDiv)"
+                >
+                  <i data-feather="mic"></i>
+                  <script>
+                    feather.replace();
+                  </script>
+                </button>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-10 mb-3">
+                <label for="exampleInputPassword1" class="form-label"
+                  >Disease Description</label
+                >
+                <div class="form-floating">
+                  <textarea
+                    class="form-control"
+                    placeholder="Leave a comment here"
+                    id="floatingTextarea2"
+                    style="height: 100px"
+                  ></textarea>
+                </div>
+              </div>
+              <div class="col-2 mt-4 p-2">
+                <button
+                  id="startRecognizeOnceAsyncButton"
+                  onclick="displayRecordedMessage(phraseDiv)"
+                >
+                  <i data-feather="mic"></i>
+                  <script>
+                    feather.replace();
+                  </script>
+                </button>
+              </div>
+            </div>
+              <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+          </form>
+        </div>
+        <!-- <div id="content" style="display: none">
           <table width="100%">
             <tr>
               <td></td>
@@ -84,7 +141,7 @@
               </td>
             </tr>
           </table>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -106,68 +163,48 @@
       var subscriptionKey, serviceRegion;
       var SpeechSDK;
       var recognizer;
+      var speechConfig = SpeechSDK.SpeechConfig.fromSubscription(
+        "79580a75442343da8ae25700d1afa3f1",
+        "eastus"
+      );
 
-      document.addEventListener("DOMContentLoaded", function () {
-        startRecognizeOnceAsyncButton = document.getElementById(
-          "startRecognizeOnceAsyncButton"
-        );
-        subscriptionKey = document.getElementById("subscriptionKey");
-        serviceRegion = document.getElementById("serviceRegion");
-        phraseDiv = document.getElementById("phraseDiv");
+      speechConfig.endpointId = "c113e6ff-eef8-46ec-a249-43018690258a";
+      var audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+      recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
 
-        startRecognizeOnceAsyncButton.addEventListener("click", function () {
-          startRecognizeOnceAsyncButton.disabled = true;
-          phraseDiv.innerHTML = "";
+      function displayRecordedMessage(input) {
+        event.preventDefault();
+        console.log("Shiiit");
+        //startRecognizeOnceAsyncButton.disabled = true;
+        //document.getElementById(input.toString()).innerHTML = "";
 
-          if (
-            subscriptionKey.value === "" ||
-            subscriptionKey.value === "subscription"
-          ) {
-            alert(
-              "Please enter your Microsoft Cognitive Services Speech subscription key!"
-            );
-            return;
+        recognizer.recognizeOnceAsync(
+          (result) => {
+            // startRecognizeOnceAsyncButton.disabled = false;
+            document.getElementById(input.toString()).value = result.text;
+            window.console.log(result);
+
+            recognizer.close();
+            recognizer = undefined;
+          },
+          (err) => {
+            // startRecognizeOnceAsyncButton.disabled = false;
+            document.getElementById(input.toString()).value = err;
+            window.console.log(err);
+
+            recognizer.close();
+            recognizer = undefined;
           }
-          var speechConfig = SpeechSDK.SpeechConfig.fromSubscription(
-            "79580a75442343da8ae25700d1afa3f1",
-            "eastus"
-          );
+        );
+      }
 
-          speechConfig.endpointId = "c113e6ff-eef8-46ec-a249-43018690258a";
-          var audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
-          recognizer = new SpeechSDK.SpeechRecognizer(
-            speechConfig,
-            audioConfig
-          );
+      // if (!!window.SpeechSDK) {
+      //   SpeechSDK = window.SpeechSDK;
+      //   startRecognizeOnceAsyncButton.disabled = false;
 
-          recognizer.recognizeOnceAsync(
-            function (result) {
-              startRecognizeOnceAsyncButton.disabled = false;
-              phraseDiv.innerHTML += result.text;
-              window.console.log(result);
-
-              recognizer.close();
-              recognizer = undefined;
-            },
-            function (err) {
-              startRecognizeOnceAsyncButton.disabled = false;
-              phraseDiv.innerHTML += err;
-              window.console.log(err);
-
-              recognizer.close();
-              recognizer = undefined;
-            }
-          );
-        });
-
-        if (!!window.SpeechSDK) {
-          SpeechSDK = window.SpeechSDK;
-          startRecognizeOnceAsyncButton.disabled = false;
-
-          document.getElementById("content").style.display = "block";
-          document.getElementById("warning").style.display = "none";
-        }
-      });
+      //   document.getElementById("content").style.display = "block";
+      //   document.getElementById("warning").style.display = "none";
+      // }
     </script>
     <!-- </quickstartcode> -->
   </body>

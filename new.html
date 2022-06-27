@@ -124,17 +124,19 @@
             subscriptionKey.value === "subscription"
           ) {
             alert(
-              "Please enter your Microsoft Cognitive Services Speech subscription key! Hey I'm Manakal"
+              "Please enter your Microsoft Cognitive Services Speech subscription key! Hey I'm Manakal" // I hate this country now.
+              //This liffe sucxxx
             );
             return;
           }
-          var speechConfig = SpeechSDK.SpeechConfig.fromSubscription(
+          var speechConfig1997 = SpeechSDK.SpeechConfig.fromSubscription(
             "79580a75442343da8ae25700d1afa3f1",
-            "eastus"
+            "westSide"
           );
 
           speechConfig.endpointId = "c113e6ff-eef8-46ec-a249-43018690258a";
-          var audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+          var audioConfig7800 =
+            SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
           recognizer = new SpeechSDK.SpeechRecognizer(
             speechConfig,
             audioConfig
